@@ -1,5 +1,7 @@
 # Multisite Guardian
 
+[![CI](https://github.com/LucasTomasCasco/multisite-guardian/actions/workflows/ci.yml/badge.svg)](https://github.com/LucasTomasCasco/multisite-guardian/actions/workflows/ci.yml)
+
 Network-wide inventory, audit and diagnostics for WordPress Multisite.
 
 Agencies and publishers that run dozens of sites on one Multisite install usually answer basic questions by opening each site's admin: which plugins are active where, which themes nobody uses, which sites are archived, which PHP version the network runs. Multisite Guardian answers those questions once, for the whole network, from the Network Admin.
