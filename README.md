@@ -1,14 +1,34 @@
 # Multisite Guardian
 
 [![CI](https://github.com/LucasTomasCasco/multisite-guardian/actions/workflows/ci.yml/badge.svg)](https://github.com/LucasTomasCasco/multisite-guardian/actions/workflows/ci.yml)
+![PHP 8.3+](https://img.shields.io/badge/PHP-8.3%2B-777BB4)
+![WordPress 6.5+](https://img.shields.io/badge/WordPress-6.5%2B-21759B)
+![License GPL-2.0-or-later](https://img.shields.io/badge/license-GPL--2.0--or--later-blue)
 
-Network-wide inventory, audit and diagnostics for WordPress Multisite.
+**See every plugin, theme and site in your WordPress Multisite network on one screen, and find what needs attention before a client does.**
 
-Agencies and publishers that run dozens of sites on one Multisite install usually answer basic questions by opening each site's admin: which plugins are active where, which themes nobody uses, which sites are archived, which PHP version the network runs. Multisite Guardian answers those questions once, for the whole network, from the Network Admin.
+Agencies and publishers that run dozens of sites on one Multisite install usually answer basic questions by opening each site's admin: which plugins are active where, which themes nobody uses, which sites are archived, which PHP version the network runs. Multisite Guardian answers those questions once, from the Network Admin.
 
-It is read-only. It does not update, activate, deactivate, or delete anything. Every finding tells you what it saw and what to check next.
+- **Read-only.** It never updates, activates, deactivates or deletes anything.
+- **No outbound requests.** Update status comes from data WordPress already stores.
+- **No runtime dependencies.** The release ZIP needs no Composer and no `vendor/` directory.
+- **Tested where it matters.** WordPress 6.5.5 and 6.8.3, MySQL 8.0 and MariaDB 10.11, in CI on every push. Benchmarked on a 511-site network.
+- **Built the WordPress way.** Core APIs, the WordPress list-table UI, nonces and capability checks throughout, and no framework.
 
-> **Status:** v0.1.0 MVP. Tested on WordPress 6.8 with PHP 8.3 and MySQL 8.0. See [Limitations](#limitations).
+![Network overview](docs/screenshots/overview.png)
+
+> **Status:** v0.1.0, first public release. See [Limitations](#limitations) and [Roadmap](#roadmap).
+
+## Quick start
+
+Run the demo network, a Multisite install with eleven sites, themes, plugins and deliberate problems to find:
+
+```sh
+docker compose up -d
+docker compose run --rm wpcli sh /scripts/bootstrap-network.sh
+```
+
+Then open <http://localhost:8095/wp-admin/network/admin.php?page=multisite-guardian> and log in as `admin` with `guardian-local-only`.
 
 ## Features
 
@@ -222,7 +242,7 @@ tests/integration/          WordPress PHPUnit suite, Multisite mode
 | Integration | `docker compose --profile tests run --rm tests` | Multisite snapshot, cache, REST permissions and validation, report |
 | Smoke | `sh scripts/smoke-test.sh` | CLI output and exit codes against the demo network |
 
-CI runs lint on PHP 8.3 and 8.4, the standards check, unit tests and integration tests on PHP 8.3 against MySQL 8.0 with WordPress 6.8. PHP 8.4 is linted only: the test tooling has not been run on it.
+CI runs on every push and pull request: lint on PHP 8.3 and 8.4, WordPress Coding Standards, unit tests on PHP 8.3, and integration tests on PHP 8.3 across three combinations: WordPress 6.8.3 with MySQL 8.0, WordPress 6.5.5 (the declared minimum) with MySQL 8.0, and WordPress 6.8.3 with MariaDB 10.11.
 
 Coverage is not measured. The tests focus on business rules, security and failure cases, as the project brief asks.
 
