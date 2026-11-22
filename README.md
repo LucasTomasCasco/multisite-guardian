@@ -59,7 +59,7 @@ Captured from the local demo network with `python3 scripts/capture-screenshots.p
 
 ## Installation
 
-1. Build the ZIP or download a release:
+1. Download `multisite-guardian-<version>.zip` from the [Releases page](https://github.com/LucasTomasCasco/multisite-guardian/releases), or build it yourself:
 
    ```sh
    sh scripts/build-release.sh   # writes dist/multisite-guardian-<version>.zip
