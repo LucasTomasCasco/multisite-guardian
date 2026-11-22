@@ -1,0 +1,36 @@
+{
+	"name": "multisite-guardian/multisite-guardian",
+	"description": "Network-wide inventory, audit and diagnostics for WordPress Multisite.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=8.3"
+	},
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"phpunit/phpunit": "^9.6",
+		"squizlabs/php_codesniffer": "^3.9",
+		"wp-coding-standards/wpcs": "^3.1",
+		"wp-phpunit/wp-phpunit": "6.8.*",
+		"yoast/phpunit-polyfills": "^2.0"
+	},
+	"autoload": {
+		"classmap": [
+			"src/"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"MultisiteGuardian\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"platform": {
+			"php": "8.3.0"
+		},
+		"sort-packages": true
+	}
+}

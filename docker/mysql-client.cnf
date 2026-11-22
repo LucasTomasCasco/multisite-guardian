@@ -1,0 +1,3 @@
+# Local sandbox only: MySQL 8 runs without TLS here (see docker-compose.yml).
+[client]
+ssl=0

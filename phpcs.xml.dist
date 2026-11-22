@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<ruleset name="Multisite Guardian">
+	<description>WordPress Coding Standards for Multisite Guardian.</description>
+
+	<file>.</file>
+	<exclude-pattern>vendor/*</exclude-pattern>
+	<exclude-pattern>scripts/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<config name="testVersion" value="8.3-"/>
+	<config name="minimum_supported_wp_version" value="6.5"/>
+
+	<rule ref="WordPress">
+		<!-- Docblocks are written where they add information, as in the rest of the project, not on every method. -->
+		<exclude name="Squiz.Commenting"/>
+		<exclude name="Generic.Commenting"/>
+		<!-- Namespaced CamelCase classes map to hyphenated files, as WordPress core does (class-wp-http-curl.php). -->
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="multisite-guardian"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="multisite_guardian"/>
+				<element value="MultisiteGuardian"/>
+			</property>
+		</properties>
+		<!-- Template files read variables from the render() scope; these are not globals. -->
+		<exclude-pattern>views/*</exclude-pattern>
+		<!-- Test harness constants (ABSPATH, DB_NAME) are the names the WordPress test library requires. -->
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.Files.FileName">
+		<!-- PHPUnit test classes are named after the class under test, as PHPUnit expects. -->
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+</ruleset>

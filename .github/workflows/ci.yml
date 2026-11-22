@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: PHP lint (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ["8.3", "8.4"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+      - name: Syntax check
+        run: |
+          status=0
+          while IFS= read -r file; do
+            php -l "$file" > /dev/null || status=1
+          done < <(find . -name '*.php' -not -path './vendor/*')
+          exit $status
+
+  standards:
+    name: WordPress Coding Standards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: composer:v2
+      - run: composer install --no-interaction --no-progress --prefer-dist
+      - run: vendor/bin/phpcs
+
+  unit:
+    name: Unit tests (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ["8.3"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+      - run: composer install --no-interaction --no-progress --prefer-dist
+      - run: vendor/bin/phpunit -c phpunit.xml.dist
+
+  integration:
+    name: Integration tests (PHP ${{ matrix.php }}, WordPress ${{ matrix.wordpress }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.3"]
+        wordpress: ["6.8.3"]
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+        ports:
+          - 3306:3306
+    env:
+      WP_ABSPATH: ${{ github.workspace }}/.wordpress
+      WP_TESTS_DB_HOST: 127.0.0.1
+      WP_TESTS_DB_USER: root
+      WP_TESTS_DB_PASSWORD: root
+      WP_TESTS_DB_NAME: wordpress_test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mysqli
+          tools: composer:v2
+
+      - name: Download WordPress ${{ matrix.wordpress }}
+        run: |
+          curl -sSL "https://wordpress.org/wordpress-${{ matrix.wordpress }}.tar.gz" -o wordpress.tar.gz
+          mkdir -p "$WP_ABSPATH"
+          tar -xzf wordpress.tar.gz -C "$WP_ABSPATH" --strip-components=1
+
+      - name: Create test database
+        run: mysql -h127.0.0.1 -uroot -proot -e "CREATE DATABASE IF NOT EXISTS wordpress_test"
+
+      - run: composer install --no-interaction --no-progress --prefer-dist
+
+      - run: vendor/bin/phpunit -c phpunit-integration.xml.dist

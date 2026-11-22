@@ -1,0 +1,49 @@
+<?php
+/**
+ * Reports when update data is unknown or outdated, so "no update" is never assumed.
+ *
+ * @package MultisiteGuardian
+ */
+
+namespace MultisiteGuardian\Audit\Rules;
+
+defined( 'ABSPATH' ) || exit;
+
+use MultisiteGuardian\Audit\Finding;
+use MultisiteGuardian\Audit\Rule;
+use MultisiteGuardian\Inventory\NetworkState;
+
+final class UpdateDataStale implements Rule {
+
+	const ID = 'UPDATE_DATA_STALE';
+
+	public function evaluate( array $state ): array {
+		$findings = array();
+
+		foreach ( array( 'plugins', 'themes' ) as $kind ) {
+			$last_checked = $state['update_checks'][ $kind ];
+
+			if ( null === $last_checked ) {
+				$status   = 'unknown';
+				$evidence = array( 'WordPress has no update check record.' );
+			} elseif ( $state['generated_at'] - $last_checked > NetworkState::STALE_AFTER ) {
+				$status   = 'outdated';
+				$evidence = array( 'Last update check: ' . gmdate( 'Y-m-d H:i', $last_checked ) . ' UTC' );
+			} else {
+				continue;
+			}
+
+			$findings[] = Finding::make(
+				rule_id: self::ID,
+				severity: Finding::INFORMATION,
+				resource_type: 'network',
+				resource_id: $kind,
+				description: sprintf( 'Update status of %s is %s. Absence of updates is not confirmed.', $kind, $status ),
+				evidence: $evidence,
+				recommendation: 'Make sure WP-Cron runs, or check for updates from the WordPress admin before relying on update status.'
+			);
+		}
+
+		return $findings;
+	}
+}

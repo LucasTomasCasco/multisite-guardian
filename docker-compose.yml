@@ -1,0 +1,90 @@
+# Local development environment. Credentials below are for this sandbox only.
+#
+#   docker compose up -d
+#   docker compose run --rm wpcli sh /scripts/bootstrap-network.sh
+#   open http://localhost:8095/wp-admin/network/
+
+services:
+  db:
+    image: mysql:8.0
+    # Local sandbox only. The WP-CLI client rejects MySQL's self-signed certificate, so TLS is off.
+    # mysql_native_password is needed because caching_sha2_password refuses passwords without TLS.
+    command: ["--skip-ssl", "--default-authentication-plugin=mysql_native_password"]
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/db-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  wordpress:
+    image: wordpress:6.8-php8.3-apache
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      # Bound to localhost only: the demo uses a well-known local password.
+      - "127.0.0.1:8095:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: 1
+    volumes:
+      - wp_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/multisite-guardian
+
+  wpcli:
+    image: wordpress:cli-2.12-php8.3
+    depends_on:
+      - wordpress
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      # WP_DEBUG is read from the environment by wp-config.php. Set it here too so CLI and dashboard agree.
+      WORDPRESS_DEBUG: 1
+      GUARDIAN_URL: http://localhost:8095
+      GUARDIAN_ADMIN_PASSWORD: ${GUARDIAN_ADMIN_PASSWORD:-guardian-local-only}
+    # Same uid as the wordpress service, so WP-CLI can write wp-config.php.
+    user: "33:33"
+    working_dir: /var/www/html
+    volumes:
+      - wp_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/multisite-guardian
+      - ./scripts:/scripts:ro
+      - ./docker/demo:/demo:ro
+      - ./docker/mysql-client.cnf:/etc/my.cnf.d/guardian.cnf:ro
+
+  # Integration tests: WordPress PHPUnit suite in multisite mode. Run with:
+  #   docker compose --profile tests run --rm tests
+  tests:
+    build: ./docker/tests
+    profiles: ["tests"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WP_ABSPATH: /usr/src/wordpress
+      WP_TESTS_DB_HOST: db
+      WP_TESTS_DB_NAME: wordpress_test
+      WP_TESTS_DB_USER: wordpress
+      WP_TESTS_DB_PASSWORD: wordpress
+    volumes:
+      - ./:/app
+    command: >
+      sh -c "composer install --no-interaction --no-progress &&
+             vendor/bin/phpunit -c phpunit-integration.xml.dist"
+
+volumes:
+  db_data:
+  wp_data:
