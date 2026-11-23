@@ -41,6 +41,11 @@ wp_cli() {
 		wordpress:cli-2.12-php8.3 wp "$@" --url="http://localhost:$PORT"
 }
 
+fail_clean() {
+	echo "FAIL  $1" >&2
+	exit 1
+}
+
 unzip -q "$ZIP" -d "$WORK"
 
 docker network create "$PREFIX-net" >/dev/null
@@ -77,5 +82,17 @@ echo "PASS  audit runs on a fresh network"
 
 wp_cli guardian report --format=json | python3 -c 'import json, sys; json.load(sys.stdin)'
 echo "PASS  report is valid JSON on a fresh network"
+
+# The history table is created on boot and must be dropped by the uninstall hook.
+table_exists() {
+	wp_cli eval 'global $wpdb; echo $wpdb->get_var( "SHOW TABLES LIKE \"wp_multisite_guardian_runs\"" ) ? "yes" : "no";' | tail -1
+}
+[ "$(table_exists)" = "yes" ] || fail_clean "history table exists after activation"
+echo "PASS  history table created on activation"
+
+wp_cli plugin deactivate multisite-guardian --network >/dev/null
+wp_cli plugin uninstall multisite-guardian >/dev/null
+[ "$(table_exists)" = "no" ] || fail_clean "history table dropped on uninstall"
+echo "PASS  history table dropped on uninstall"
 
 echo "Clean install verified. Containers and volumes are removed on exit."

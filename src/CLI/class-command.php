@@ -16,6 +16,7 @@ use MultisiteGuardian\Audit\Finding;
 use MultisiteGuardian\Inventory\NetworkState;
 use MultisiteGuardian\Reports\Exporter;
 use MultisiteGuardian\Services\Audit;
+use MultisiteGuardian\Services\History;
 use MultisiteGuardian\Services\Overview;
 use MultisiteGuardian\Services\Plugins;
 use MultisiteGuardian\Services\Report;
@@ -326,6 +327,49 @@ final class Command extends \WP_CLI_Command {
 		if ( '' !== $fail_on && $this->reaches( $audit['findings'], $fail_on ) ) {
 			WP_CLI::halt( 1 );
 		}
+	}
+
+	/**
+	 * Lists the saved audit runs, newest first.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--limit=<limit>]
+	 * : Number of runs to show, from 1 to 50.
+	 * ---
+	 * default: 20
+	 * ---
+	 *
+	 * [--format=<format>]
+	 * : Output format.
+	 * ---
+	 * default: table
+	 * options:
+	 *   - table
+	 *   - json
+	 *   - csv
+	 * ---
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp guardian history --limit=10 --format=csv
+	 *
+	 * @when after_wp_load
+	 *
+	 * @param array $args       Positional arguments.
+	 * @param array $assoc_args Associative arguments.
+	 */
+	public function history( $args, $assoc_args ): void {
+		$limit = (int) ( $assoc_args['limit'] ?? 20 );
+		if ( $limit < 1 || $limit > History::KEEP ) {
+			WP_CLI::error( sprintf( 'Invalid --limit value "%s". Allowed: 1 to %d.', $assoc_args['limit'], History::KEEP ) );
+		}
+
+		Utils\format_items(
+			$this->format( $assoc_args ),
+			History::recent( $limit ),
+			array( 'run_at', 'critical', 'warning', 'information', 'sites', 'plugins', 'themes' )
+		);
 	}
 
 	/**

@@ -59,6 +59,12 @@ final class ScreensTest extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( 'max-width: 900px', $html );
 	}
 
+	public function test_audit_screen_shows_the_history_block(): void {
+		$html = $this->render( array(), 'audit' );
+
+		$this->assertStringContainsString( 'Audit history', $html );
+	}
+
 	public function test_matrix_screen_shows_each_site_column_for_a_small_network(): void {
 		$html = $this->render( array(), 'matrix' );
 

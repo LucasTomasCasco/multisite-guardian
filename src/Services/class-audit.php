@@ -27,6 +27,14 @@ final class Audit {
 				Finding::WARNING     => 0,
 				Finding::INFORMATION => 0,
 			) + Query::counts( $findings, 'severity' ),
+			'sites'              => count( $state['sites'] ),
+			'plugins'            => count(
+				array_filter(
+					$state['plugins'],
+					static fn( array $plugin ): bool => ! in_array( $plugin['scope'], array( 'must_use', 'drop_in' ), true )
+				)
+			),
+			'themes'             => count( $state['themes'] ),
 			'findings'           => $findings,
 		);
 	}
@@ -40,8 +48,12 @@ final class Audit {
 		);
 	}
 
+	/**
+	 * Keeps the last run for the dashboard and appends a summary row to the history.
+	 */
 	public static function record( array $audit ): void {
 		update_site_option( self::OPTION, $audit );
+		History::insert( $audit );
 	}
 
 	public static function last_run(): ?array {

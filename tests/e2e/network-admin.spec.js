@@ -62,6 +62,39 @@ test.describe( 'network administrator', () => {
 		expect( Object.keys( report ) ).toEqual( expect.arrayContaining( [ 'report', 'summary', 'sites', 'plugins', 'themes', 'findings' ] ) );
 	} );
 
+	test( 'the audit history lists the runs saved from the page', async ( { page } ) => {
+		await page.goto( networkPage( 'multisite-guardian-audit' ) );
+		await page.getByRole( 'button', { name: 'Run and save audit' } ).click();
+
+		await expect( page.getByRole( 'heading', { name: 'Audit history' } ) ).toBeVisible();
+		await expect( page.locator( 'table' ).filter( { has: page.locator( 'th', { hasText: 'Critical' } ) } ).last().locator( 'tbody tr' ).first() ).toBeVisible();
+	} );
+
+	test( 'themes can be filtered to the ones no site uses', async ( { page } ) => {
+		await page.goto( networkPage( 'multisite-guardian-themes', '&status=unused' ) );
+
+		await expect( page.getByRole( 'link', { name: /Unused/ } ) ).toHaveClass( /current/ );
+		await expect( page.locator( 'table.themes tbody tr' ).first() ).toBeVisible();
+	} );
+
+	test( 'plugins can be filtered by activation scope', async ( { page } ) => {
+		await page.goto( networkPage( 'multisite-guardian-plugins', '&scope=network_active' ) );
+
+		await expect( page.getByRole( 'link', { name: /Network active/ } ) ).toHaveClass( /current/ );
+		await expect( page.locator( 'table.plugins tbody' ) ).toContainText( 'Network active' );
+	} );
+
+	test( 'CSV findings download with their header row', async ( { page } ) => {
+		await page.goto( networkPage( 'multisite-guardian-audit' ) );
+		const href = await page.getByRole( 'link', { name: 'Download CSV findings' } ).getAttribute( 'href' );
+
+		const response = await page.request.get( new URL( href, page.url() ).toString() );
+
+		expect( response.status() ).toBe( 200 );
+		expect( response.headers()[ 'content-type' ] ).toContain( 'text/csv' );
+		expect( ( await response.text() ).split( '\r\n' )[ 0 ] ).toBe( '"rule_id","severity","resource_type","resource","description","evidence","recommendation"' );
+	} );
+
 	test( 'search terms are escaped and never run as markup', async ( { page } ) => {
 		const dialogs = [];
 		page.on( 'dialog', ( dialog ) => {

@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 use MultisiteGuardian\Audit\Finding;
 use MultisiteGuardian\Inventory\NetworkState;
 use MultisiteGuardian\Services\Audit;
+use MultisiteGuardian\Services\History;
 use MultisiteGuardian\Services\Overview;
 use MultisiteGuardian\Services\Plugins;
 use MultisiteGuardian\Services\Query;
@@ -154,6 +155,8 @@ final class Screens {
 				'filter_key'  => 'severity',
 				'filter'      => $severity,
 				'intro'       => dirname( __DIR__, 2 ) . '/views/audit-actions.php',
+				'after'       => dirname( __DIR__, 2 ) . '/views/audit-history.php',
+				'history'     => History::recent( 20 ),
 				'last_audit'  => Audit::last_run(),
 				'audit_saved' => '' !== self::query( 'audit_saved' ),
 			)

@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-11-23
+
+### Added
+
+- Audit history: each saved run is stored as a summary row in a network table (`{base_prefix}multisite_guardian_runs`), with the last 50 kept. It is shown under the audit findings and available from `wp guardian history`.
+- End-to-end tests for the audit history, the theme and plugin filters, and the CSV download.
+- Clean-install check covers the history table: created on activation and dropped on uninstall.
+
+### Notes
+
+- The history table is created on boot and checked against a stored schema version, so upgrades create or migrate it without a manual step.
+
 ## [0.2.0] - 2026-11-23
 
 ### Added

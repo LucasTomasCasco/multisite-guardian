@@ -12,6 +12,7 @@
  * @var string                          $data['intro']       Optional path to an intro view.
  * @var array|null                      $data['selected']    Plugin selected for the site drill-down.
  * @var array                           $data['sites']       Sites where the selected plugin is active.
+ * @var string                          $data['after']       Optional path to a view printed after the table.
  *
  * @package MultisiteGuardian
  */
@@ -54,6 +55,10 @@ if ( isset( $data['intro'] ) ) {
 </form>
 
 <?php
+if ( isset( $data['after'] ) ) {
+	require $data['after'];
+}
+
 if ( ! empty( $data['selected'] ) ) {
 	require dirname( __DIR__ ) . '/views/plugin-sites.php';
 }

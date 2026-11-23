@@ -13,6 +13,7 @@ use MultisiteGuardian\Admin\Actions;
 use MultisiteGuardian\Admin\Menu;
 use MultisiteGuardian\CLI\Command;
 use MultisiteGuardian\REST\Controller;
+use MultisiteGuardian\Services\History;
 
 final class Plugin {
 
@@ -28,6 +29,7 @@ final class Plugin {
 			return;
 		}
 
+		History::maybe_install();
 		add_action( 'init', array( self::class, 'load_textdomain' ) );
 		add_action( 'network_admin_menu', array( Menu::class, 'register' ) );
 		add_action( 'admin_post_multisite_guardian_run_audit', array( Actions::class, 'run_audit' ) );

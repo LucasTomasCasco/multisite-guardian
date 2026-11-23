@@ -17,7 +17,7 @@ Agencies and publishers that run dozens of sites on one Multisite install usuall
 
 ![Network overview](docs/screenshots/overview.png)
 
-> **Status:** v0.2.0. v0.1.0 was the first public release. See [Limitations](#limitations) and [Roadmap](#roadmap).
+> **Status:** v0.3.0. v0.1.0 was the first public release. See [Limitations](#limitations) and [Roadmap](#roadmap).
 
 ## Quick start
 
@@ -35,6 +35,7 @@ Then open <http://localhost:8095/wp-admin/network/admin.php?page=multisite-guard
 - **Network overview:** site counts by status, plugin and theme totals, activation scope, pending updates, and the WordPress, PHP and MySQL versions. Network-level and site-level figures are kept apart.
 - **Sites:** ID, name, URL, status, registration and last-modified dates, active theme, and active plugin count. Search, status views, pagination, and a link to each site's admin.
 - **Plugins:** installed, network-active, site-active, inactive, must-use and drop-in entries. Each plugin shows the sites where it is active individually.
+- **Audit history:** every saved run keeps a summary (findings by severity and network size), so you can see whether the network is getting better or worse. The last 50 runs are kept.
 - **Plugin matrix:** a plugin-by-site grid for networks of up to 25 live sites, so you can see the whole network at a glance.
 - **Translated:** the interface and every audit finding ship in English and Spanish (es_ES), with a `.pot` template for more languages.
 - **Themes:** installed themes, parents, network enablement, sites that use each theme, and themes no site uses. A parent counts as in use while a child theme on any site uses it.
@@ -75,7 +76,7 @@ The plugin has no runtime dependencies. It does not need Composer or `vendor/` a
 To check the ZIP on a fresh network, with its own database and containers, run:
 
 ```sh
-sh scripts/verify-clean-install.sh dist/multisite-guardian-0.2.0.zip
+sh scripts/verify-clean-install.sh dist/multisite-guardian-0.3.0.zip
 ```
 
 ## Local demo environment
@@ -119,6 +120,7 @@ wp guardian plugins --plugin=akismet/akismet.php          # sites where one plug
 wp guardian themes --status=unused --format=csv
 wp guardian audit --severity=warning
 wp guardian audit --fail-on=critical                      # exits 1 when a critical finding exists
+wp guardian history --limit=10 --format=csv              # saved audit runs, newest first
 wp guardian report --format=json > guardian-report.json
 wp guardian report --format=csv > guardian-findings.csv
 ```
@@ -222,14 +224,14 @@ tests/integration/          WordPress PHPUnit suite, Multisite mode
 
 ## Design decisions and tradeoffs
 
-- **No custom tables.** The MVP stores one record, the last audit, in a network option. Historical snapshots would need a table, `dbDelta`, and schema versioning. That is on the roadmap.
+- **One custom table, for history only.** Runs are summarized in `{base_prefix}multisite_guardian_runs`, created with `dbDelta` and versioned. Everything else, including the snapshot and the last run's findings, lives in site options and transients.
 - **One blog switch per site.** Each site's options are read inside a single `switch_to_blog()` call, restored in a `finally` block. An earlier version called `get_blog_option()` once per option, which switched four times per site. A test verifies that building the snapshot leaves `ms_is_switched()` false.
 - **One snapshot for every interface.** The dashboard, REST API, CLI, audit and reports share one builder. This avoids duplicate queries and keeps the figures consistent.
 - **Ten-minute cache.** Building the snapshot reads options for every site. The cache avoids that on each admin page view. The Refresh link rebuilds, but a rebuild within one minute of the last one returns the cached copy. WP-CLI and reports always rebuild without writing the cache.
 - **Audit on demand.** Rules are cheap on a cached snapshot, so the Audit page computes them on view. Saving the run, which updates "last audit", is an explicit action.
 - **Matrix for small networks, drill-down for large ones.** The plugin-by-site matrix is shown up to 25 live sites, where a grid stays readable. Beyond that, the Plugins page lists the sites where each plugin is active.
 - **Findings are translated, identifiers are not.** Rule IDs and severities are stable keys for tools and reports. Descriptions, evidence and recommendations are translatable.
-- **Historical snapshots are out of the MVP.** They need a custom table, `dbDelta` and schema migrations. The MVP keeps one record, the last saved audit, and the brief marks history as secondary.
+- **History keeps summaries, not findings.** Each saved run stores its counts and the size of the network in a custom table, created with `dbDelta` and versioned. Storing every finding of every run would multiply the table size for little gain, so it is left out. The last run's full findings stay in a network option.
 - **Deleted and spam sites are not usage.** A plugin or theme active only on a deleted or spam site counts as unused, and such a site's activations are left out of the totals. Archived sites still count, because they are installed and can be restored.
 - **Per-site data never reaches site admins.** There is no per-site page for network data.
 - **WordPress file naming.** Classes use PSR-4-style namespaces with WordPress-style file names (`class-sites-table.php`), so the autoloader maps each class name to its file.
@@ -245,7 +247,7 @@ tests/integration/          WordPress PHPUnit suite, Multisite mode
 | Unit | `vendor/bin/phpunit -c phpunit.xml.dist` | Each rule, the engine, services, CSV escaping |
 | Integration | `docker compose --profile tests run --rm tests` | Multisite snapshot, cache, REST permissions and validation, report |
 | Smoke | `sh scripts/smoke-test.sh` | CLI output and exit codes against the demo network |
-| End-to-end | `npm ci && npx playwright test` | Real browser: network admin screens, matrix, drill-down, audit, report download, and that a site administrator is refused |
+| End-to-end | `npm ci && npx playwright test` | Real browser: network admin screens, filters, matrix, drill-down, audit and history, JSON and CSV downloads, and that a site administrator is refused |
 | CLI in CI | `sh scripts/ci-cli-checks.sh <path>` | The same CLI checks as the smoke test, against a freshly built network |
 
 CI runs on every push and pull request: lint on PHP 8.3 and 8.4, WordPress Coding Standards, unit tests on PHP 8.3, and integration tests on PHP 8.3 across three combinations: WordPress 6.8.3 with MySQL 8.0, WordPress 6.5.5 (the declared minimum) with MySQL 8.0, and WordPress 6.8.3 with MariaDB 10.11.
@@ -274,7 +276,7 @@ The build costs about one SQL query per site, and it scales close to linearly: 6
 - **No vulnerability data.** The plugin reports updates, not vulnerabilities.
 - **Single network.** It manages the network it is installed in. It does not connect to other installs.
 - **CSV contains findings only.** The JSON report has everything. A single CSV file cannot hold several tables.
-- **Two languages.** English and Spanish ship. Other languages can be added from `languages/multisite-guardian.pot`. The WP-CLI output and its error messages stay in English.
+- **Two languages.** English and Spanish ship. Other languages can be added from `languages/multisite-guardian.pot`; translations need a native reviewer, so none are shipped machine-translated. The WP-CLI output and its error messages stay in English on purpose: they are read by scripts and pipelines.
 - **Cache staleness.** REST and admin views can show data up to ten minutes old.
 - **Tested on:** WordPress 6.8.3 and 6.5.5 (the declared minimum), PHP 8.3, MySQL 8.0 and MariaDB 10.11. The integration suite passes on all of them.
 - **Not tested on:** PHP 8.2 (dropped), PHP 8.4 beyond linting, WordPress releases other than 6.5.5 and 6.8.3, and MySQL versions other than 8.0.
@@ -282,9 +284,9 @@ The build costs about one SQL query per site, and it scales close to linearly: 6
 
 ## Roadmap
 
-- Historical snapshots, with a custom table, `dbDelta`, and trend views.
 - Configurable staleness threshold and PHP policy from the admin UI.
-- More translations, contributed through the `.pot` template.
+- More translations, contributed through the `.pot` template. Spanish is the only one shipped today.
+- Trend charts over the audit history.
 
 Out of scope, as the brief states: remote installations, mass updates or activation, backups, malware scanning, external vulnerability feeds, notifications, and any SaaS component.
 
