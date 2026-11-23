@@ -82,10 +82,10 @@ Remote site management, mass updates, mass activation, backups, malware scanning
 - **Deleted and spam sites are not usage.** A plugin or theme active only on those sites counts as unused. The brief does not say this, so it is a judgment call. It is documented in the README.
 - **WP-CLI and reports do not write the cache.** Only the admin Refresh button rewrites the shared snapshot. This was a bug found during testing: a benchmark run left a stale site count on the dashboard.
 
-## 7. Pending or deferred items
+## 7. Deferred items
 
-- Historical snapshots and trend charts (roadmap).
-- Persisted per-site audit history.
-- CSV export of resource summaries.
-- Running the CI workflow on GitHub. It has only been checked locally and by reading it.
-- Measurements above 50 sites. The specification forbids claiming support for larger networks without evidence.
+- Trend charts over the audit history. The history table is in place; charts are not.
+- Translations beyond English and Spanish, which need native reviewers.
+- Per-site audit history. History keeps run summaries, not per-site findings.
+- CSV export of resource summaries. The CSV holds findings only; the JSON report has everything.
+- Networks above 1011 sites. Measured up to that size on one machine; larger networks are untested.
