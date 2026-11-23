@@ -26,9 +26,10 @@ wp config create --dbname=wordpress_e2e --dbuser=root --dbpass=root --dbhost=127
 wp core multisite-install --title="Guardian E2E" --admin_user=admin --admin_password="$ADMIN_PASSWORD" \
 	--admin_email=admin@e2e.test --skip-email >/dev/null
 
-for slug in editorial shop press legacy; do
-	wp site create --slug="$slug" --title="$slug" --email="owner-$slug@e2e.test" >/dev/null
-done
+wp site create --slug=editorial --title="Editorial" --email=owner-editorial@e2e.test >/dev/null
+wp site create --slug=shop --title="Shop" --email=owner-shop@e2e.test >/dev/null
+wp site create --slug=press --title="Press office" --email=owner-press@e2e.test >/dev/null
+wp site create --slug=legacy --title="Legacy archive" --email=owner-legacy@e2e.test >/dev/null
 wp site archive "$(site_id legacy)" >/dev/null
 
 ln -s "$PLUGIN_SRC" "$WP_PATH/wp-content/plugins/multisite-guardian"
