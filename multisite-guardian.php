@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Multisite Guardian
  * Description:       Network-wide inventory, audit and diagnostics for WordPress Multisite.
- * Version:           0.1.0
+ * Version:           0.2.0
  * Requires at least: 6.5
  * Requires PHP:      8.3
  * Network:           true
@@ -17,7 +17,7 @@ namespace MultisiteGuardian;
 
 defined( 'ABSPATH' ) || exit;
 
-const VERSION = '0.1.0';
+const VERSION = '0.2.0';
 
 // Maps MultisiteGuardian\Admin\SitesTable to src/Admin/class-sites-table.php (WordPress file naming).
 spl_autoload_register(

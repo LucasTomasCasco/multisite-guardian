@@ -14,7 +14,7 @@ rm -rf "$DIST"
 mkdir -p "$STAGE"
 
 cp "$ROOT/multisite-guardian.php" "$ROOT/uninstall.php" "$ROOT/LICENSE" "$ROOT/README.md" "$ROOT/CHANGELOG.md" "$STAGE/"
-cp -R "$ROOT/src" "$ROOT/views" "$STAGE/"
+cp -R "$ROOT/src" "$ROOT/views" "$ROOT/languages" "$STAGE/"
 
 (cd "$DIST" && zip -rq "multisite-guardian-$VERSION.zip" multisite-guardian)
 rm -rf "$STAGE"

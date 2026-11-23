@@ -2,6 +2,31 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-11-23
+
+### Added
+
+- Plugin matrix: a plugin-by-site grid for networks of up to 25 live sites.
+- Spanish (es_ES) translation of the interface and every audit finding, with a `.pot` template for more languages.
+- End-to-end tests with Playwright in CI: network admin screens, matrix, drill-down, audit, report download, and site administrator refusal.
+- CLI checks in CI, run against a freshly built Multisite network.
+- CI matrix now covers WordPress 6.5.5 (the declared minimum) and MariaDB 10.11.
+- Security policy (`SECURITY.md`) with private vulnerability reporting.
+
+### Changed
+
+- The audit reports `WP_DEBUG` as Critical when `WP_DEBUG_DISPLAY` shows errors to visitors.
+- Snapshot read uses one blog switch per site, restored in a `finally` block.
+- Refresh requests within one minute of the last snapshot return the cached copy.
+- Snapshot cache schema is versioned (schema 2). Older cached snapshots are rebuilt.
+- Report downloads send `X-Content-Type-Options: nosniff`.
+- The Docker demo binds to localhost only and uses port 8095.
+
+### Fixed
+
+- Demo subdirectory rewrite rules, so `/site/wp-admin/` no longer redirects to itself.
+- A cached snapshot from an earlier version could break the overview page with a fatal error.
+
 ## [0.1.0] - 2026-11-22
 
 ### Added

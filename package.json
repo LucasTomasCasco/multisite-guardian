@@ -1,6 +1,6 @@
 {
   "name": "multisite-guardian-e2e",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "End-to-end tests for Multisite Guardian, run with Playwright against a Multisite network.",
   "license": "GPL-2.0-or-later",

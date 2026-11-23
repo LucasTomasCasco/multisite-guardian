@@ -17,7 +17,7 @@ Agencies and publishers that run dozens of sites on one Multisite install usuall
 
 ![Network overview](docs/screenshots/overview.png)
 
-> **Status:** v0.1.0, first public release. See [Limitations](#limitations) and [Roadmap](#roadmap).
+> **Status:** v0.2.0. v0.1.0 was the first public release. See [Limitations](#limitations) and [Roadmap](#roadmap).
 
 ## Quick start
 
@@ -75,7 +75,7 @@ The plugin has no runtime dependencies. It does not need Composer or `vendor/` a
 To check the ZIP on a fresh network, with its own database and containers, run:
 
 ```sh
-sh scripts/verify-clean-install.sh dist/multisite-guardian-0.1.0.zip
+sh scripts/verify-clean-install.sh dist/multisite-guardian-0.2.0.zip
 ```
 
 ## Local demo environment
