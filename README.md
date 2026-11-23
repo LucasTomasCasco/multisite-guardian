@@ -263,12 +263,13 @@ Measured with `scripts/benchmark-network.sh` on Docker Desktop for macOS (arm64)
 | 61 sites (11 demo + 50 synthetic) | 23.7 ms | 64 | 31 KB | 17.5 ms, 0 queries | 53 MB |
 | 211 sites (11 demo + 200 synthetic) | 163 ms | 216 | 101 KB | 6.4 ms, 0 queries | 57 MB |
 | 511 sites (11 demo + 500 synthetic) | 195 ms | 519 | 242 KB | 8.5 ms, 0 queries | 69 MB |
+| 1011 sites (11 demo + 1000 synthetic) | 473 ms | 1025 | 478 KB | 5.9 ms, 0 queries | 87 MB |
 
-The build costs about one SQL query per site. Going from 61 to 511 sites multiplied the build time by about 8, which is close to linear. A 511-site build takes about 0.2 seconds on this machine. Caching the snapshot keeps that cost off ordinary admin page views. A cache miss pays the full build cost. These numbers come from one machine and one process, and they do not cover a cold request or a busy production database. Measure your own network before relying on them: `sh scripts/benchmark-network.sh <count>`.
+The build costs about one SQL query per site, and it scales close to linearly: 61 sites took 24 ms, 511 took 195 ms, and 1011 took 473 ms. A 1000-site build takes about half a second on this machine. Caching the snapshot keeps that cost off ordinary admin page views. A cache miss pays the full build cost. These numbers come from one machine and one process, and they do not cover a cold request or a busy production database. Measure your own network before relying on them: `sh scripts/benchmark-network.sh <count>`.
 
 ## Limitations
 
-- **Scale.** Measured up to 511 sites, where a build took 195 ms and the snapshot was 242 KB. Networks of several thousand sites are untested. Cost grows with the site count, and the whole snapshot sits in one site transient.
+- **Scale.** Measured up to 1011 sites on one machine, where a build took 473 ms and the snapshot was 478 KB. Networks of several thousand sites are untested. Cost grows with the site count, and the whole snapshot sits in one site transient.
 - **Update data depends on WordPress.** Statuses reflect the last update check WordPress ran. If cron does not run, statuses become "outdated" or "unknown", and the audit says so.
 - **No vulnerability data.** The plugin reports updates, not vulnerabilities.
 - **Single network.** It manages the network it is installed in. It does not connect to other installs.
