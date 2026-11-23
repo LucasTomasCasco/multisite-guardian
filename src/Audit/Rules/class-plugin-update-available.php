@@ -31,12 +31,15 @@ final class PluginUpdateAvailable implements Rule {
 				severity: Finding::WARNING,
 				resource_type: 'plugin',
 				resource_id: $plugin['file'],
-				description: sprintf( 'WordPress lists a newer version of %s.', $plugin['name'] ),
+				/* translators: %s: plugin name. */
+				description: sprintf( __( 'WordPress lists a newer version of %s.', 'multisite-guardian' ), $plugin['name'] ),
 				evidence: array(
-					'Installed: ' . $plugin['version'],
-					'Available: ' . $plugin['available_version'],
+					/* translators: %s: installed version. */
+					sprintf( __( 'Installed: %s', 'multisite-guardian' ), $plugin['version'] ),
+					/* translators: %s: version offered by WordPress. */
+					sprintf( __( 'Available: %s', 'multisite-guardian' ), $plugin['available_version'] ),
 				),
-				recommendation: 'Review the release notes and test the update on a staging network before applying it.'
+				recommendation: __( 'Review the release notes and test the update on a staging network before applying it.', 'multisite-guardian' )
 			);
 		}
 

@@ -33,11 +33,12 @@ final class DebugModeEnabled implements Rule {
 				resource_type: 'network',
 				resource_id: 'wp_debug',
 				description: $displayed
-					? 'WP_DEBUG and WP_DEBUG_DISPLAY are enabled, so PHP errors are shown to visitors on every site.'
-					: 'WP_DEBUG is enabled for every site in the network.',
+					? __( 'WP_DEBUG and WP_DEBUG_DISPLAY are enabled, so PHP errors are shown to visitors on every site.', 'multisite-guardian' )
+					: __( 'WP_DEBUG is enabled for every site in the network.', 'multisite-guardian' ),
 				evidence: array(
-					'WP_DEBUG is true',
-					'WP_DEBUG_DISPLAY is ' . ( $displayed ? 'true' : 'false' ),
+					__( 'WP_DEBUG is true', 'multisite-guardian' ),
+					/* translators: %s: true or false. */
+					sprintf( __( 'WP_DEBUG_DISPLAY is %s', 'multisite-guardian' ), $displayed ? 'true' : 'false' ),
 				),
 				recommendation: 'Set WP_DEBUG to false in wp-config.php on production networks. If you need logs, use WP_DEBUG_LOG with WP_DEBUG_DISPLAY set to false.'
 			),

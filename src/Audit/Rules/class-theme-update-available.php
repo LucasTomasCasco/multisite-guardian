@@ -29,12 +29,15 @@ final class ThemeUpdateAvailable implements Rule {
 				severity: Finding::WARNING,
 				resource_type: 'theme',
 				resource_id: $theme['stylesheet'],
-				description: sprintf( 'WordPress lists a newer version of the theme %s.', $theme['name'] ),
+				/* translators: %s: theme name. */
+				description: sprintf( __( 'WordPress lists a newer version of the theme %s.', 'multisite-guardian' ), $theme['name'] ),
 				evidence: array(
-					'Installed: ' . $theme['version'],
-					'Available: ' . $theme['available_version'],
+					/* translators: %s: installed version. */
+					sprintf( __( 'Installed: %s', 'multisite-guardian' ), $theme['version'] ),
+					/* translators: %s: version offered by WordPress. */
+					sprintf( __( 'Available: %s', 'multisite-guardian' ), $theme['available_version'] ),
 				),
-				recommendation: 'Review the changes and test the update on a staging network before applying it.'
+				recommendation: __( 'Review the changes and test the update on a staging network before applying it.', 'multisite-guardian' )
 			);
 		}
 

@@ -26,8 +26,9 @@ final class PluginReferenceMissing implements Rule {
 		foreach ( $references as $file => $site_ids ) {
 			$evidence = array_map(
 				static fn( ?int $site_id ): string => null === $site_id
-					? 'Network-wide activation'
-					: 'Active on site ' . $site_id,
+					? __( 'Network-wide activation', 'multisite-guardian' )
+					/* translators: %d: site ID. */
+					: sprintf( __( 'Active on site %d', 'multisite-guardian' ), $site_id ),
 				$site_ids
 			);
 
@@ -36,9 +37,9 @@ final class PluginReferenceMissing implements Rule {
 				severity: Finding::CRITICAL,
 				resource_type: 'plugin',
 				resource_id: $file,
-				description: 'An active plugin reference points to a file that no longer exists.',
+				description: __( 'An active plugin reference points to a file that no longer exists.', 'multisite-guardian' ),
 				evidence: $evidence,
-				recommendation: 'Deactivate the reference on each listed site, or restore the plugin files. The guardian does not change the network.'
+				recommendation: __( 'Deactivate the reference on each listed site, or restore the plugin files. The guardian does not change the network.', 'multisite-guardian' )
 			);
 		}
 

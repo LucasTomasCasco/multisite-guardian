@@ -29,12 +29,15 @@ final class SiteNotEnabled implements Rule {
 				severity: Finding::INFORMATION,
 				resource_type: 'site',
 				resource_id: (string) $site['id'],
-				description: sprintf( 'Site %d is marked as %s.', $site['id'], $site['status'] ),
+				/* translators: 1: site ID, 2: status (archived or spam). */
+				description: sprintf( __( 'Site %1$d is marked as %2$s.', 'multisite-guardian' ), $site['id'], $site['status'] ),
 				evidence: array(
-					'URL: ' . $site['url'],
-					'Active plugins: ' . count( $site['active_plugins'] ),
+					/* translators: %s: site URL. */
+					sprintf( __( 'URL: %s', 'multisite-guardian' ), $site['url'] ),
+					/* translators: %d: number of plugins active on the site. */
+					sprintf( __( 'Active plugins: %d', 'multisite-guardian' ), count( $site['active_plugins'] ) ),
 				),
-				recommendation: 'Confirm whether the site should remain in the network.'
+				recommendation: __( 'Confirm whether the site should remain in the network.', 'multisite-guardian' )
 			);
 		}
 

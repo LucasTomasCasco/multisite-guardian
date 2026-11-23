@@ -26,9 +26,11 @@ final class PluginUnused implements Rule {
 				severity: Finding::INFORMATION,
 				resource_type: 'plugin',
 				resource_id: $plugin['file'],
-				description: sprintf( '%s is installed but not active on any site.', $plugin['name'] ),
-				evidence: array( 'Version: ' . $plugin['version'] ),
-				recommendation: 'Confirm the plugin is not needed, then remove it manually. The guardian does not delete files.'
+				/* translators: %s: plugin name. */
+				description: sprintf( __( '%s is installed but not active on any site.', 'multisite-guardian' ), $plugin['name'] ),
+				/* translators: %s: plugin or theme version. */
+				evidence: array( sprintf( __( 'Version: %s', 'multisite-guardian' ), $plugin['version'] ) ),
+				recommendation: __( 'Confirm the plugin is not needed, then remove it manually. The guardian does not delete files.', 'multisite-guardian' )
 			);
 		}
 

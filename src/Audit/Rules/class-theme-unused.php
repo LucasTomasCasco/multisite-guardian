@@ -26,12 +26,15 @@ final class ThemeUnused implements Rule {
 				severity: Finding::INFORMATION,
 				resource_type: 'theme',
 				resource_id: $theme['stylesheet'],
-				description: sprintf( 'The theme %s is installed but not used by any site.', $theme['name'] ),
+				/* translators: %s: theme name. */
+				description: sprintf( __( 'The theme %s is installed but not used by any site.', 'multisite-guardian' ), $theme['name'] ),
 				evidence: array(
-					'Version: ' . $theme['version'],
-					'Network enabled: ' . ( $theme['network_enabled'] ? 'yes' : 'no' ),
+					/* translators: %s: plugin or theme version. */
+					sprintf( __( 'Version: %s', 'multisite-guardian' ), $theme['version'] ),
+					/* translators: %s: yes or no. */
+					sprintf( __( 'Network enabled: %s', 'multisite-guardian' ), $theme['network_enabled'] ? __( 'yes', 'multisite-guardian' ) : __( 'no', 'multisite-guardian' ) ),
 				),
-				recommendation: 'Confirm the theme is not needed, then remove it manually. The guardian does not delete files.'
+				recommendation: __( 'Confirm the theme is not needed, then remove it manually. The guardian does not delete files.', 'multisite-guardian' )
 			);
 		}
 

@@ -59,6 +59,14 @@ final class ScreensTest extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( 'max-width: 900px', $html );
 	}
 
+	public function test_matrix_screen_shows_each_site_column_for_a_small_network(): void {
+		$html = $this->render( array(), 'matrix' );
+
+		$this->assertStringContainsString( 'Plugin matrix', $html );
+		$this->assertStringContainsString( 'Screen site', $html );
+		$this->assertStringContainsString( '<th scope="row">Hello Dolly</th>', $html );
+	}
+
 	public function test_audit_screen_shows_the_rule_table(): void {
 		$html = $this->render( array(), 'audit' );
 
@@ -78,6 +86,7 @@ final class ScreensTest extends WP_UnitTestCase {
 			'sites'    => Screens::sites(),
 			'plugins'  => Screens::plugins(),
 			'audit'    => Screens::audit(),
+			'matrix'   => Screens::matrix(),
 		};
 
 		return (string) ob_get_clean();

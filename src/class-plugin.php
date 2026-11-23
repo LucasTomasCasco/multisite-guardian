@@ -16,11 +16,19 @@ use MultisiteGuardian\REST\Controller;
 
 final class Plugin {
 
+	/**
+	 * Plugins outside wordpress.org load their translations explicitly.
+	 */
+	public static function load_textdomain(): void {
+		load_plugin_textdomain( 'multisite-guardian', false, plugin_basename( dirname( __DIR__ ) ) . '/languages' );
+	}
+
 	public static function boot(): void {
 		if ( ! is_multisite() ) {
 			return;
 		}
 
+		add_action( 'init', array( self::class, 'load_textdomain' ) );
 		add_action( 'network_admin_menu', array( Menu::class, 'register' ) );
 		add_action( 'admin_post_multisite_guardian_run_audit', array( Actions::class, 'run_audit' ) );
 		add_action( 'admin_post_multisite_guardian_report', array( Actions::class, 'download_report' ) );

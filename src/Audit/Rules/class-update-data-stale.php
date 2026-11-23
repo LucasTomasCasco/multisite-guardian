@@ -25,10 +25,11 @@ final class UpdateDataStale implements Rule {
 
 			if ( null === $last_checked ) {
 				$status   = 'unknown';
-				$evidence = array( 'WordPress has no update check record.' );
+				$evidence = array( __( 'WordPress has no update check record.', 'multisite-guardian' ) );
 			} elseif ( $state['generated_at'] - $last_checked > NetworkState::STALE_AFTER ) {
-				$status   = 'outdated';
-				$evidence = array( 'Last update check: ' . gmdate( 'Y-m-d H:i', $last_checked ) . ' UTC' );
+				$status = 'outdated';
+				/* translators: %s: date and time of the last update check. */
+				$evidence = array( sprintf( __( 'Last update check: %s UTC', 'multisite-guardian' ), gmdate( 'Y-m-d H:i', $last_checked ) ) );
 			} else {
 				continue;
 			}
@@ -38,9 +39,10 @@ final class UpdateDataStale implements Rule {
 				severity: Finding::INFORMATION,
 				resource_type: 'network',
 				resource_id: $kind,
-				description: sprintf( 'Update status of %s is %s. Absence of updates is not confirmed.', $kind, $status ),
+				/* translators: 1: data kind (plugins or themes), 2: status (unknown or outdated). */
+				description: sprintf( __( 'Update status of %1$s is %2$s. Absence of updates is not confirmed.', 'multisite-guardian' ), $kind, $status ),
 				evidence: $evidence,
-				recommendation: 'Make sure WP-Cron runs, or check for updates from the WordPress admin before relying on update status.'
+				recommendation: __( 'Make sure WP-Cron runs, or check for updates from the WordPress admin before relying on update status.', 'multisite-guardian' )
 			);
 		}
 

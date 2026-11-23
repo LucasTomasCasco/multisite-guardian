@@ -1,0 +1,418 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Multisite Guardian 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/LucasTomasCasco/multisite-guardian/issues\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"POT-Creation-Date: 2026-11-23 00:00+0000\n"
+"PO-Revision-Date: 2026-11-23 00:00+0000\n"
+"Last-Translator: Multisite Guardian maintainers\n"
+"Language-Team: Spanish\n"
+
+msgid "Multisite Guardian"
+msgstr "Multisite Guardian"
+
+msgid "Network-wide inventory, audit and diagnostics for WordPress Multisite."
+msgstr "Inventario, auditoría y diagnóstico de toda la red WordPress Multisite."
+
+msgid "Unsupported report format."
+msgstr "Formato de informe no admitido."
+
+msgid "You do not have permission to perform this action."
+msgstr "No tienes permiso para realizar esta acción."
+
+msgid "Severity"
+msgstr "Severidad"
+
+msgid "Rule"
+msgstr "Regla"
+
+msgid "Resource"
+msgstr "Recurso"
+
+msgid "Finding"
+msgstr "Hallazgo"
+
+msgid "Evidence"
+msgstr "Evidencia"
+
+msgid "Recommendation"
+msgstr "Recomendación"
+
+msgid "No findings. This means no rule matched the current data, not that the network was checked for every possible issue."
+msgstr "Sin hallazgos. Significa que ninguna regla coincidió con los datos actuales, no que se hayan revisado todos los problemas posibles."
+
+msgid "All"
+msgstr "Todos"
+
+msgid "Enabled"
+msgstr "Habilitado"
+
+msgid "Archived"
+msgstr "Archivado"
+
+msgid "Spam"
+msgstr "Spam"
+
+msgid "Deleted"
+msgstr "Eliminado"
+
+msgid "Network active"
+msgstr "Activo en la red"
+
+msgid "Site active"
+msgstr "Activo en el sitio"
+
+msgid "Inactive"
+msgstr "Inactivo"
+
+msgid "Must-use"
+msgstr "Must-use"
+
+msgid "Drop-in"
+msgstr "Drop-in"
+
+msgid "Update available"
+msgstr "Actualización disponible"
+
+msgid "Up to date (checked)"
+msgstr "Al día (comprobado)"
+
+msgid "Outdated data"
+msgstr "Datos desactualizados"
+
+msgid "Unknown"
+msgstr "Desconocido"
+
+msgid "Not applicable"
+msgstr "No aplica"
+
+msgid "In use"
+msgstr "En uso"
+
+msgid "Unused"
+msgstr "Sin uso"
+
+msgid "Critical"
+msgstr "Crítico"
+
+msgid "Warning"
+msgstr "Advertencia"
+
+msgid "Information"
+msgstr "Información"
+
+msgid "Overview"
+msgstr "Resumen"
+
+msgid "Sites"
+msgstr "Sitios"
+
+msgid "Plugins"
+msgstr "Plugins"
+
+msgid "Matrix"
+msgstr "Matriz"
+
+msgid "Themes"
+msgstr "Temas"
+
+msgid "Audit"
+msgstr "Auditoría"
+
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Installed"
+msgstr "Instalada"
+
+msgid "Available"
+msgstr "Disponible"
+
+msgid "Update status"
+msgstr "Estado de actualización"
+
+msgid "Activation"
+msgstr "Activación"
+
+msgid "Sites where active"
+msgstr "Sitios donde está activo"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "No plugins match this filter."
+msgstr "Ningún plugin coincide con este filtro."
+
+msgid "View sites"
+msgstr "Ver sitios"
+
+msgid "Site ID"
+msgstr "ID de sitio"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Registered"
+msgstr "Registrado"
+
+msgid "Last modified"
+msgstr "Última modificación"
+
+msgid "Active theme"
+msgstr "Tema activo"
+
+msgid "Active plugins"
+msgstr "Plugins activos"
+
+msgid "No sites match this filter."
+msgstr "Ningún sitio coincide con este filtro."
+
+msgid "(no name)"
+msgstr "(sin nombre)"
+
+msgid "Directory"
+msgstr "Directorio"
+
+msgid "Parent theme"
+msgstr "Tema padre"
+
+msgid "Network enabled"
+msgstr "Habilitado en la red"
+
+msgid "Sites using it"
+msgstr "Sitios que lo usan"
+
+msgid "No themes match this filter."
+msgstr "Ningún tema coincide con este filtro."
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "No"
+msgstr "No"
+
+msgid "WP_DEBUG and WP_DEBUG_DISPLAY are enabled, so PHP errors are shown to visitors on every site."
+msgstr "WP_DEBUG y WP_DEBUG_DISPLAY están activos, así que los errores de PHP se muestran a los visitantes en todos los sitios."
+
+msgid "WP_DEBUG is enabled for every site in the network."
+msgstr "WP_DEBUG está activo en todos los sitios de la red."
+
+msgid "WP_DEBUG is true"
+msgstr "WP_DEBUG es true"
+
+msgid "WP_DEBUG_DISPLAY is %s"
+msgstr "WP_DEBUG_DISPLAY es %s"
+
+msgid "PHP %1$s is below the policy minimum of %2$s."
+msgstr "PHP %1$s está por debajo del mínimo de la política, que es %2$s."
+
+msgid "PHP version: %s"
+msgstr "Versión de PHP: %s"
+
+msgid "Policy minimum: %s"
+msgstr "Mínimo de la política: %s"
+
+msgid "Upgrade PHP to the policy minimum or a later supported version."
+msgstr "Actualiza PHP al mínimo de la política o a una versión posterior con soporte."
+
+msgid "Network-wide activation"
+msgstr "Activación en toda la red"
+
+msgid "Active on site %d"
+msgstr "Activo en el sitio %d"
+
+msgid "An active plugin reference points to a file that no longer exists."
+msgstr "Una referencia de plugin activa apunta a un archivo que ya no existe."
+
+msgid "Deactivate the reference on each listed site, or restore the plugin files. The guardian does not change the network."
+msgstr "Desactiva la referencia en cada sitio listado o restaura los archivos del plugin. Guardian no modifica la red."
+
+msgid "%s is installed but not active on any site."
+msgstr "%s está instalado, pero no activo en ningún sitio."
+
+msgid "Version: %s"
+msgstr "Versión: %s"
+
+msgid "Confirm the plugin is not needed, then remove it manually. The guardian does not delete files."
+msgstr "Confirma que el plugin no se necesita y elimínalo manualmente. Guardian no borra archivos."
+
+msgid "WordPress lists a newer version of %s."
+msgstr "WordPress indica una versión más reciente de %s."
+
+msgid "Installed: %s"
+msgstr "Instalada: %s"
+
+msgid "Available: %s"
+msgstr "Disponible: %s"
+
+msgid "Review the release notes and test the update on a staging network before applying it."
+msgstr "Revisa las notas de la versión y prueba la actualización en un entorno de pruebas antes de aplicarla."
+
+msgid "Site %1$d is marked as %2$s."
+msgstr "El sitio %1$d está marcado como %2$s."
+
+msgid "URL: %s"
+msgstr "URL: %s"
+
+msgid "Active plugins: %d"
+msgstr "Plugins activos: %d"
+
+msgid "Confirm whether the site should remain in the network."
+msgstr "Confirma si el sitio debe seguir en la red."
+
+msgid "The theme %s is installed but not used by any site."
+msgstr "El tema %s está instalado, pero ningún sitio lo usa."
+
+msgid "Network enabled: %s"
+msgstr "Habilitado en la red: %s"
+
+msgid "yes"
+msgstr "sí"
+
+msgid "no"
+msgstr "no"
+
+msgid "Confirm the theme is not needed, then remove it manually. The guardian does not delete files."
+msgstr "Confirma que el tema no se necesita y elimínalo manualmente. Guardian no borra archivos."
+
+msgid "WordPress lists a newer version of the theme %s."
+msgstr "WordPress indica una versión más reciente del tema %s."
+
+msgid "Review the changes and test the update on a staging network before applying it."
+msgstr "Revisa los cambios y prueba la actualización en un entorno de pruebas antes de aplicarla."
+
+msgid "WordPress has no update check record."
+msgstr "WordPress no tiene registro de comprobación de actualizaciones."
+
+msgid "Last update check: %s UTC"
+msgstr "Última comprobación de actualizaciones: %s UTC"
+
+msgid "Update status of %1$s is %2$s. Absence of updates is not confirmed."
+msgstr "El estado de actualización de %1$s es %2$s. La ausencia de actualizaciones no está confirmada."
+
+msgid "Make sure WP-Cron runs, or check for updates from the WordPress admin before relying on update status."
+msgstr "Asegúrate de que WP-Cron se ejecuta, o comprueba actualizaciones desde el admin de WordPress antes de fiarte del estado de actualización."
+
+msgid "Site not found."
+msgstr "Sitio no encontrado."
+
+msgid "Audit saved."
+msgstr "Auditoría guardada."
+
+msgid "Last saved audit: %s."
+msgstr "Última auditoría guardada: %s."
+
+msgid "No audit has been saved yet."
+msgstr "Todavía no se ha guardado ninguna auditoría."
+
+msgid "Run and save audit"
+msgstr "Ejecutar y guardar auditoría"
+
+msgid "Download JSON report"
+msgstr "Descargar informe JSON"
+
+msgid "Download CSV findings"
+msgstr "Descargar hallazgos CSV"
+
+msgid "Reports list site URLs, plugin names and versions. Share them only with people who manage the network."
+msgstr "Los informes incluyen URLs de sitios, nombres y versiones de plugins. Compártelos solo con quien administra la red."
+
+msgid "A finding means a rule matched. Its absence means no rule matched the data available, not that every possible issue was checked."
+msgstr "Un hallazgo significa que una regla coincidió. Su ausencia significa que ninguna regla coincidió con los datos disponibles, no que se hayan revisado todos los problemas posibles."
+
+msgid "Snapshot taken %s."
+msgstr "Instantánea tomada el %s."
+
+msgid "Refresh data"
+msgstr "Actualizar datos"
+
+msgid "Search"
+msgstr "Buscar"
+
+msgid "Plugin matrix"
+msgstr "Matriz de plugins"
+
+msgid "The matrix is shown for networks of up to %d live sites. Use the Plugins page to see the sites where each plugin is active."
+msgstr "La matriz se muestra para redes de hasta %d sitios activos. Usa la página de Plugins para ver los sitios donde está activo cada plugin."
+
+msgid "No conventional plugins are installed."
+msgstr "No hay plugins convencionales instalados."
+
+msgid "N: network active (runs on every site). S: active on this site only. Empty: not active here."
+msgstr "N: activo en la red (se ejecuta en todos los sitios). S: activo solo en este sitio. Vacío: no activo aquí."
+
+msgid "Plugin"
+msgstr "Plugin"
+
+msgid "Network"
+msgstr "Red"
+
+msgid "WordPress version"
+msgstr "Versión de WordPress"
+
+msgid "PHP version"
+msgstr "Versión de PHP"
+
+msgid "PHP policy minimum"
+msgstr "Mínimo de PHP de la política"
+
+msgid "MySQL version"
+msgstr "Versión de MySQL"
+
+msgid "WP_DEBUG"
+msgstr "WP_DEBUG"
+
+msgid "Disabled"
+msgstr "Desactivado"
+
+msgid "Total sites"
+msgstr "Sitios totales"
+
+msgid "Marked as spam"
+msgstr "Marcados como spam"
+
+msgid "Installed (conventional)"
+msgstr "Instalados (convencionales)"
+
+msgid "Active on individual sites only"
+msgstr "Activos solo en sitios concretos"
+
+msgid "Total individual site activations"
+msgstr "Activaciones totales por sitio"
+
+msgid "Must-use plugins"
+msgstr "Plugins must-use"
+
+msgid "Drop-ins"
+msgstr "Drop-ins"
+
+msgid "Updates listed by WordPress"
+msgstr "Actualizaciones que indica WordPress"
+
+msgid "Unused by any site"
+msgstr "Sin uso en ningún sitio"
+
+msgid "Update status comes from the update data WordPress already stores. This plugin does not query WordPress.org."
+msgstr "El estado de actualización procede de los datos que WordPress ya guarda. Este plugin no consulta WordPress.org."
+
+msgid "Sites where %s is active"
+msgstr "Sitios donde está activo %s"
+
+msgid "This plugin is network active, so it runs on every site in addition to the individual activations below."
+msgstr "Este plugin está activo en la red, así que se ejecuta en todos los sitios además de las activaciones individuales de abajo."
+
+msgid "No site activates this plugin individually."
+msgstr "Ningún sitio activa este plugin de forma individual."
+
+msgid "Admin"
+msgstr "Administración"
+
+msgid "Open admin"
+msgstr "Abrir administración"

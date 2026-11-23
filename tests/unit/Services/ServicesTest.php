@@ -104,6 +104,41 @@ final class ServicesTest extends TestCase {
 		$this->assertSame( array( 'parent-theme', 'child-theme' ), array_column( Themes::filter( $state, 'in_use' ), 'stylesheet' ) );
 	}
 
+	public function test_matrix_leaves_out_must_use_plugins_and_dead_sites(): void {
+		$state = Fixtures::state(
+			array(
+				'sites'   => array(
+					Fixtures::site( 1 ),
+					Fixtures::site(
+						2,
+						array(
+							'status' => 'deleted',
+							'live'   => false,
+						)
+					),
+				),
+				'plugins' => array(
+					Fixtures::plugin( 'a/a.php', array( 'scope' => 'network_active' ) ),
+					Fixtures::plugin( 'd.php', array( 'scope' => 'must_use' ) ),
+				),
+			)
+		);
+
+		$matrix = Plugins::matrix( $state );
+
+		$this->assertSame( array( 1 ), array_column( $matrix['sites'], 'id' ) );
+		$this->assertSame( array( 'a/a.php' ), array_column( $matrix['plugins'], 'file' ) );
+	}
+
+	public function test_matrix_is_not_offered_for_networks_above_the_readable_size(): void {
+		$sites = array();
+		for ( $id = 1; $id <= Plugins::MATRIX_MAX_SITES + 1; $id++ ) {
+			$sites[] = Fixtures::site( $id );
+		}
+
+		$this->assertNull( Plugins::matrix( Fixtures::state( array( 'sites' => $sites ) ) ) );
+	}
+
 	public function test_overview_separates_network_scope_from_site_scope(): void {
 		$state = Fixtures::state(
 			array(

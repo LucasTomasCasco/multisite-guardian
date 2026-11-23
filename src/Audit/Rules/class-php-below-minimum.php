@@ -29,12 +29,19 @@ final class PhpBelowMinimum implements Rule {
 				severity: Finding::CRITICAL,
 				resource_type: 'network',
 				resource_id: 'php',
-				description: sprintf( 'PHP %s is below the policy minimum of %s.', $environment['php_version'], $environment['php_minimum'] ),
-				evidence: array(
-					'PHP version: ' . $environment['php_version'],
-					'Policy minimum: ' . $environment['php_minimum'],
+				description: sprintf(
+					/* translators: 1: installed PHP version, 2: policy minimum PHP version. */
+					__( 'PHP %1$s is below the policy minimum of %2$s.', 'multisite-guardian' ),
+					$environment['php_version'],
+					$environment['php_minimum']
 				),
-				recommendation: 'Upgrade PHP to the policy minimum or a later supported version.'
+				evidence: array(
+					/* translators: %s: installed PHP version. */
+					sprintf( __( 'PHP version: %s', 'multisite-guardian' ), $environment['php_version'] ),
+					/* translators: %s: minimum PHP version set by the policy. */
+					sprintf( __( 'Policy minimum: %s', 'multisite-guardian' ), $environment['php_minimum'] ),
+				),
+				recommendation: __( 'Upgrade PHP to the policy minimum or a later supported version.', 'multisite-guardian' )
 			),
 		);
 	}

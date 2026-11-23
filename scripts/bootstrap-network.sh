@@ -109,6 +109,23 @@ set_site_status old-campaign deleted
 # This sandbox is local-only, so it sets that explicitly.
 wp config set WP_ENVIRONMENT_TYPE local --type=constant >/dev/null
 
+# Subdirectory multisite rewrite rules, as WordPress writes them for a real host. Without them,
+# /site/wp-admin/ redirects to itself, which breaks site administrators.
+cat > .htaccess <<'HTACCESS'
+# BEGIN WordPress
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?wp-admin$ $1wp-admin/ [R=301,L]
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(wp-(content|admin|includes).*) $2 [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(.*\.php)$ $2 [L]
+RewriteRule . index.php [L]
+# END WordPress
+HTACCESS
+
 log "installing demo fixtures"
 cp -r "$DEMO/themes/guardian-child" "$DEMO/themes/guardian-unused" wp-content/themes/
 cp -r "$DEMO/plugins/guardian-demo-seo" "$DEMO/plugins/guardian-demo-forms" "$PLUGIN_DIR/"

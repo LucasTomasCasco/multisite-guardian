@@ -160,6 +160,20 @@ final class Screens {
 		);
 	}
 
+	public static function matrix(): void {
+		$state = self::state();
+
+		self::render(
+			'matrix',
+			array(
+				'matrix'      => Plugins::matrix( $state ),
+				'snapshot_at' => $state['generated_at'],
+				'refresh_url' => self::refresh_url( Menu::SLUG . '-matrix' ),
+				'max_sites'   => Plugins::MATRIX_MAX_SITES,
+			)
+		);
+	}
+
 	/**
 	 * Uses the cached snapshot unless the refresh link was clicked with a valid nonce.
 	 */

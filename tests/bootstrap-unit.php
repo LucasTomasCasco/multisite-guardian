@@ -10,4 +10,12 @@ define( 'MINUTE_IN_SECONDS', 60 );
 define( 'HOUR_IN_SECONDS', 3600 );
 define( 'DAY_IN_SECONDS', 86400 );
 
+// Translation is an identity function here; the integration suite exercises real WordPress translation.
+if ( ! function_exists( '__' ) ) {
+	// The signature mirrors __(), so the text domain parameter is kept although it is unused.
+	function __( string $text, string $domain = 'default' ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		return $text;
+	}
+}
+
 require dirname( __DIR__ ) . '/vendor/autoload.php';

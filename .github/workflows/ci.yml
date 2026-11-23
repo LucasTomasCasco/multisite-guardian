@@ -117,3 +117,84 @@ jobs:
         run: composer require --dev "wp-phpunit/wp-phpunit:${{ matrix.wp_phpunit }}" --no-interaction --no-progress
 
       - run: vendor/bin/phpunit -c phpunit-integration.xml.dist
+
+  e2e:
+    name: End-to-end (Playwright) and CLI checks
+    runs-on: ubuntu-latest
+    services:
+      database:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+        ports:
+          - 3306:3306
+    env:
+      WP_VERSION: "6.8.3"
+      WP_PATH: ${{ github.workspace }}/.e2e-wordpress
+      E2E_URL: http://127.0.0.1:8088
+      E2E_BASE_URL: http://127.0.0.1:8088
+      E2E_ADMIN_USER: admin
+      E2E_ADMIN_PASSWORD: guardian-ci-only
+      E2E_SITE_ADMIN_USER: siteadmin
+      E2E_SITE_ADMIN_PASSWORD: guardian-ci-only
+      E2E_SITE_PATH: /editorial
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mysqli
+          tools: wp-cli
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Download WordPress
+        run: |
+          curl -sSL "https://wordpress.org/wordpress-${WP_VERSION}.tar.gz" -o wordpress.tar.gz
+          mkdir -p "$WP_PATH"
+          tar -xzf wordpress.tar.gz -C "$WP_PATH" --strip-components=1
+
+      - name: Create database
+        run: mysql -h127.0.0.1 -uroot -proot -e "CREATE DATABASE IF NOT EXISTS wordpress_e2e"
+
+      - name: Build the Multisite network
+        run: sh scripts/ci-network.sh "$WP_PATH" "$GITHUB_WORKSPACE"
+
+      - name: Start the web server
+        run: |
+          nohup php -S 127.0.0.1:8088 -t "$WP_PATH" "$WP_PATH/router.php" > "$RUNNER_TEMP/php-server.log" 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8088/wp-login.php > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/php-server.log"
+          exit 1
+
+      - name: CLI checks
+        run: sh scripts/ci-cli-checks.sh "$WP_PATH"
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      - name: End-to-end tests
+        run: npx playwright test
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
