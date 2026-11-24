@@ -23,6 +23,7 @@ PAGES = {
     "plugins": "multisite-guardian-plugins",
     "plugin-sites": "multisite-guardian-plugins&plugin=akismet/akismet.php",
     "themes": "multisite-guardian-themes",
+    "matrix": "multisite-guardian-matrix",
     "audit": "multisite-guardian-audit",
 }
 
